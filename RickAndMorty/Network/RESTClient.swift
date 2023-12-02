@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct RESTClient<T: Codable> {
+struct RESTClient<T> where T: Codable {
     let client: Client
     let decoder: JSONDecoder = {
         var dec = JSONDecoder()
