@@ -8,22 +8,22 @@
 import SwiftUI
 
 struct CharacterRow: View {
-    let username: String
+    let character: Character
     var body: some View {
         HStack {
                 Image(systemName: "person.circle")
                     .resizable()
                     .frame(width: 24, height: 24)
                     .foregroundColor(/*@START_MENU_TOKEN@*/.blue/*@END_MENU_TOKEN@*/)
-                Text(username)
+            Text(character.name)
                     .font(.system(size: 24, design: .rounded))
                 Spacer()
-                Text("12 years")
+            Text(character.species)
                 .font(.system(size: 18, weight: .thin, design: .rounded))
         }.padding()
     }
 }
 
 #Preview {
-    CharacterRow(username: "joe doe")
+    CharacterRow(character: Character(id: 1, name: "Rick Sanchez", species: "Human"))
 }

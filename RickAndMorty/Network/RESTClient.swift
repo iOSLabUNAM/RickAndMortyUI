@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct RESTClient<T> where T: Codable {
+struct RESTClient<T: Codable> {
     let client: Client
     let decoder: JSONDecoder = {
         var dec = JSONDecoder()
@@ -21,8 +21,8 @@ struct RESTClient<T> where T: Codable {
     
     typealias successHandler = ((T) -> Void)
     
-    func show(_ path: String, success: @escaping successHandler) {
-        client.get(path) { data in
+    func show(_ path: String, page: Int = 1, success: @escaping successHandler) {
+        client.get(path, query: ["page": "\(page)"]) { data in
             guard let data = data else { return }
             
             do {

@@ -9,6 +9,7 @@ import Foundation
 import Combine
 
 struct Client {
+    static let rickAndMorty = Client("https://rickandmortyapi.com")
     let session = URLSession.shared
     let baseUrl: String
     private let contentType: String
@@ -29,13 +30,13 @@ struct Client {
     typealias requesHandler = ((Data?) -> Void)
     typealias errorHandler = ((NetworkError) -> Void)
     
-    func get(_ path: String, success: requesHandler?, failure: errorHandler? = nil) {
-        request(method: "GET", path: path, body: nil, success: success, failure: failure)
+    func get(_ path: String, query: [String:String] = [:], success: requesHandler?, failure: errorHandler? = nil) {
+        request(method: "GET", path: path, query: query, body: nil, success: success, failure: failure)
     }
     
     // Request via GCD using response handlers
-    func request(method: String, path: String, body: Data?, success: requesHandler?, failure: errorHandler? = nil) {
-        guard let request = buildRequest(method: method, path: path, body: body) else {
+    func request(method: String, path: String, query: [String:String] = [:], body: Data?, success: requesHandler?, failure: errorHandler? = nil) {
+        guard let request = buildRequest(method: method, path: path, query: query, body: body) else {
             failure?(NetworkError.invalidRequest)
             return
         }
@@ -135,12 +136,14 @@ struct Client {
                 }
             }
             .eraseToAnyPublisher()
-        
     }
     
-    private func buildRequest(method: String, path: String, body: Data?) -> URLRequest? {
+    private func buildRequest(method: String, path: String, query: [String:String] = [:], body: Data?) -> URLRequest? {
         guard var urlComp = URLComponents(string: baseUrl) else { return nil }
         urlComp.path = path
+        urlComp.queryItems = query.map { (key, value) in
+            URLQueryItem(name: key, value: value)
+        }
         
         guard let url = urlComp.url else { return nil }
         var request = URLRequest(url: url)
