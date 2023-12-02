@@ -9,7 +9,11 @@ import Foundation
 
 struct RESTClient<T: Codable> {
     let client: Client
-    let decoder = JSONDecoder()
+    let decoder: JSONDecoder = {
+        var dec = JSONDecoder()
+        dec.keyDecodingStrategy = .convertFromSnakeCase
+        return dec
+    }()
     
     init(client: Client) {
         self.client = client
