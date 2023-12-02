@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		551B1FC32B1B89F7008AAB3A /* Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = 551B1FC22B1B89F7008AAB3A /* Client.swift */; };
+		551B1FC52B1B9996008AAB3A /* RESTClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 551B1FC42B1B9996008AAB3A /* RESTClient.swift */; };
 		55D1ECAB2B1AC0D300A75267 /* RickAndMortyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55D1ECAA2B1AC0D300A75267 /* RickAndMortyApp.swift */; };
 		55D1ECAD2B1AC0D300A75267 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55D1ECAC2B1AC0D300A75267 /* ContentView.swift */; };
 		55D1ECAF2B1AC0D400A75267 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 55D1ECAE2B1AC0D400A75267 /* Assets.xcassets */; };
@@ -16,6 +18,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		551B1FC22B1B89F7008AAB3A /* Client.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Client.swift; sourceTree = "<group>"; };
+		551B1FC42B1B9996008AAB3A /* RESTClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RESTClient.swift; sourceTree = "<group>"; };
 		55D1ECA72B1AC0D300A75267 /* RickAndMorty.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RickAndMorty.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		55D1ECAA2B1AC0D300A75267 /* RickAndMortyApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RickAndMortyApp.swift; sourceTree = "<group>"; };
 		55D1ECAC2B1AC0D300A75267 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -77,6 +81,8 @@
 			isa = PBXGroup;
 			children = (
 				55D1ECBB2B1ACBC300A75267 /* StatusCode.swift */,
+				551B1FC22B1B89F7008AAB3A /* Client.swift */,
+				551B1FC42B1B9996008AAB3A /* RESTClient.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -154,6 +160,8 @@
 				55D1ECAD2B1AC0D300A75267 /* ContentView.swift in Sources */,
 				55D1ECB92B1AC67300A75267 /* CharacterRow.swift in Sources */,
 				55D1ECBC2B1ACBC300A75267 /* StatusCode.swift in Sources */,
+				551B1FC32B1B89F7008AAB3A /* Client.swift in Sources */,
+				551B1FC52B1B9996008AAB3A /* RESTClient.swift in Sources */,
 				55D1ECAB2B1AC0D300A75267 /* RickAndMortyApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -13,7 +13,7 @@ struct ContentView: View {
             List {
                 CharacterRow(username: "John Doe")
                 CharacterRow(username: "Jane Doe")
-                CharacterRow(username: "Mary Jane Whatson")
+                CharacterRow(username: "Mary Jane")
             }
             .listStyle(.plain)
             .navigationTitle("Characters")
