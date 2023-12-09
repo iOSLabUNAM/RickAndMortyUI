@@ -35,4 +35,17 @@ struct RESTClient<T: Codable> {
             }
         }
     }
+    
+    func show(path: String, page: Int = 1) async throws -> T? {
+        let response = try await client.get(path, query: ["page": "\(page)"])
+        switch response {
+        case .success(let data):
+            guard let data = data else { return nil }
+            let json = try decoder.decode(T.self, from: data)
+            return json
+        case .failure(let error):
+            debugPrint(error)
+            return nil
+        }
+    }
 }

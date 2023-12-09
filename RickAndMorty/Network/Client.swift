@@ -34,12 +34,19 @@ struct Client {
         request(method: "GET", path: path, query: query, body: nil, success: success, failure: failure)
     }
     
+    func get(_ path: String, query: [String:String] = [:]) async throws -> Result<Data?, NetworkError> {
+        return try await request(method: "GET", path: path, query: query, body: nil)
+    }
+    
     // Request via GCD using response handlers
     func request(method: String, path: String, query: [String:String] = [:], body: Data?, success: requesHandler?, failure: errorHandler? = nil) {
         guard let request = buildRequest(method: method, path: path, query: query, body: body) else {
             failure?(NetworkError.invalidRequest)
             return
         }
+        #if DEBUG
+        debugPrint(request)
+        #endif
         
         let task = session.dataTask(with: request) { data, response, error in
             if let err = error {
@@ -58,7 +65,7 @@ struct Client {
             let status = StatusCode(rawValue: httpResponse.statusCode)
             #if DEBUG
             print("Status: \(httpResponse.statusCode)")
-            debugPrint(httpResponse)
+            // debugPrint(httpResponse)
             #endif
             switch status {
             case .success:
@@ -75,10 +82,13 @@ struct Client {
     }
     
     // Request via async/await with Result type
-    func request(method: String, path: String, body: Data?) async throws -> Result<Data?, NetworkError> {
-        guard let request = buildRequest(method: method, path: path, body: body) else {
+    func request(method: String, path: String, query: [String:String] = [:], body: Data?) async throws -> Result<Data?, NetworkError> {
+        guard let request = buildRequest(method: method, path: path, query: query, body: body) else {
             return .failure(NetworkError.invalidRequest)
         }
+        #if DEBUG
+        debugPrint(request)
+        #endif
         let (data, response) = try await session.data(for: request)
         guard let httpResponse = response as? HTTPURLResponse else {
             return .failure(.invalidResponse)
@@ -87,7 +97,7 @@ struct Client {
         let status = StatusCode(rawValue: httpResponse.statusCode)
         #if DEBUG
         print("Status: \(httpResponse.statusCode)")
-        debugPrint(httpResponse)
+        // debugPrint(httpResponse)
         #endif
         switch status {
         case .success:

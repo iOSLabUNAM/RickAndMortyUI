@@ -8,18 +8,18 @@
 import SwiftUI
 
 struct ContentView: View {
-    var characters: [Character] = []
+    let client = RESTClient<PaginatedResponse<Character>>(client: Client.rickAndMorty)
+    @State var characters: [Character] = []
     var body: some View {
         NavigationView{
-            List {
-                Text("John Doe")
-                Text("Jane Doe")
+            List(characters) { character in
+                CharacterRow(character: character)
             }
             .listStyle(.plain)
             .navigationTitle("Characters")
         }.task {
-            // let client = RESTClient<PaginatedResponse<Character>>(client: Client.rickAndMorty)
-            print("Doing something async..")
+            let response = try? await client.show(path: "/api/character")
+            self.characters = response?.results ?? []
         }
     }
 }

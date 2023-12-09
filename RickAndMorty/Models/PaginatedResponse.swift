@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct PaginatedResponse<T: Codable> {
+struct PaginatedResponse<T: Codable>: Codable {
     let info: PageInfo
     let results: [T]
 }

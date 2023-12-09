@@ -20,7 +20,7 @@ struct CharacterRow: View {
                 Spacer()
             Text(character.species)
                 .font(.system(size: 18, weight: .thin, design: .rounded))
-        }.padding()
+        }
     }
 }
 
