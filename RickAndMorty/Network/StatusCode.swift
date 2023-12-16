@@ -14,7 +14,7 @@ enum StatusCode: Int {
     case redirection
     case clientError
     case serverError
-    
+
     init?(rawValue: Int) {
         switch rawValue {
         case 100, 101, 102:

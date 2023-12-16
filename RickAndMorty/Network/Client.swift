@@ -13,7 +13,7 @@ struct Client {
     let session = URLSession.shared
     let baseUrl: String
     private let contentType: String
-    
+
     enum NetworkError: Error {
         case conection
         case invalidRequest
@@ -21,25 +21,29 @@ struct Client {
         case client
         case server
     }
-    
+
     init(_ baseUrl: String, contentType: String = "application/json") {
         self.baseUrl = baseUrl
         self.contentType = contentType
     }
-    
+
     typealias requesHandler = ((Data?) -> Void)
     typealias errorHandler = ((NetworkError) -> Void)
-    
-    func get(_ path: String, query: [String:String] = [:], success: requesHandler?, failure: errorHandler? = nil) {
-        request(method: "GET", path: path, query: query, body: nil, success: success, failure: failure)
+
+    func get(_ path: String, query: [String: String] = [:], success: requesHandler?, failure: errorHandler? = nil) {
+        request(method: "GET", path: path, query: query, success: success, failure: failure)
     }
-    
-    func get(_ path: String, query: [String:String] = [:]) async throws -> Result<Data?, NetworkError> {
-        return try await request(method: "GET", path: path, query: query, body: nil)
+
+    func get(_ path: String, query: [String: String] = [:]) async throws -> Result<Data?, NetworkError> {
+        return try await request(method: "GET", path: path, query: query)
     }
-    
+
+    func getPublisher(_ path: String, query: [String: String] = [:]) -> AnyPublisher<Data?, NetworkError> {
+        return requestPublisher(method: "GET", path: path, query: query)
+    }
+
     // Request via GCD using response handlers
-    func request(method: String, path: String, query: [String:String] = [:], body: Data?, success: requesHandler?, failure: errorHandler? = nil) {
+    func request(method: String, path: String, query: [String: String] = [:], body: Data? = nil, success: requesHandler?, failure: errorHandler? = nil) {
         guard let request = buildRequest(method: method, path: path, query: query, body: body) else {
             failure?(NetworkError.invalidRequest)
             return
@@ -47,7 +51,7 @@ struct Client {
         #if DEBUG
         debugPrint(request)
         #endif
-        
+
         let task = session.dataTask(with: request) { data, response, error in
             if let err = error {
                 #if DEBUG
@@ -56,12 +60,12 @@ struct Client {
                 failure?(NetworkError.conection)
                 return
             }
-            
+
             guard let httpResponse = response as? HTTPURLResponse else {
                 failure?(NetworkError.invalidResponse)
                 return
             }
-            
+
             let status = StatusCode(rawValue: httpResponse.statusCode)
             #if DEBUG
             print("Status: \(httpResponse.statusCode)")
@@ -80,9 +84,9 @@ struct Client {
         }
         task.resume()
     }
-    
+
     // Request via async/await with Result type
-    func request(method: String, path: String, query: [String:String] = [:], body: Data?) async throws -> Result<Data?, NetworkError> {
+    func request(method: String, path: String, query: [String: String] = [:], body: Data? = nil) async throws -> Result<Data?, NetworkError> {
         guard let request = buildRequest(method: method, path: path, query: query, body: body) else {
             return .failure(NetworkError.invalidRequest)
         }
@@ -93,7 +97,7 @@ struct Client {
         guard let httpResponse = response as? HTTPURLResponse else {
             return .failure(.invalidResponse)
         }
-        
+
         let status = StatusCode(rawValue: httpResponse.statusCode)
         #if DEBUG
         print("Status: \(httpResponse.statusCode)")
@@ -110,9 +114,9 @@ struct Client {
             return .failure(.invalidResponse)
         }
     }
-    
-    func requestPublisher(method: String, path: String, body: Data?) -> AnyPublisher<Data?, NetworkError> {
-        guard let request = buildRequest(method: method, path: path, body: body) else {
+
+    func requestPublisher(method: String, path: String, query: [String: String] = [:], body: Data? = nil) -> AnyPublisher<Data?, NetworkError> {
+        guard let request = buildRequest(method: method, path: path, query: query, body: body) else {
             return Fail(error: NetworkError.invalidRequest).eraseToAnyPublisher()
         }
         return session
@@ -135,7 +139,7 @@ struct Client {
                 }
                 return data
             }
-            .mapError{ error -> NetworkError in
+            .mapError { error -> NetworkError in
                 switch error {
                 case NetworkError.client:
                     return .client
@@ -147,14 +151,14 @@ struct Client {
             }
             .eraseToAnyPublisher()
     }
-    
-    private func buildRequest(method: String, path: String, query: [String:String] = [:], body: Data?) -> URLRequest? {
+
+    private func buildRequest(method: String, path: String, query: [String: String] = [:], body: Data?) -> URLRequest? {
         guard var urlComp = URLComponents(string: baseUrl) else { return nil }
         urlComp.path = path
         urlComp.queryItems = query.map { (key, value) in
             URLQueryItem(name: key, value: value)
         }
-        
+
         guard let url = urlComp.url else { return nil }
         var request = URLRequest(url: url)
         request.httpMethod = method

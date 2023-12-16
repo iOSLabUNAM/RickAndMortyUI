@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		308440162B2D207600291F2D /* CharactersListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 308440152B2D207600291F2D /* CharactersListView.swift */; };
 		551B1FC32B1B89F7008AAB3A /* Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = 551B1FC22B1B89F7008AAB3A /* Client.swift */; };
 		551B1FC52B1B9996008AAB3A /* RESTClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 551B1FC42B1B9996008AAB3A /* RESTClient.swift */; };
 		55A446E92B1BC4CA008A93E6 /* PaginatedResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55A446E82B1BC4CA008A93E6 /* PaginatedResponse.swift */; };
@@ -20,6 +21,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		308440152B2D207600291F2D /* CharactersListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharactersListView.swift; sourceTree = "<group>"; };
 		551B1FC22B1B89F7008AAB3A /* Client.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Client.swift; sourceTree = "<group>"; };
 		551B1FC42B1B9996008AAB3A /* RESTClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RESTClient.swift; sourceTree = "<group>"; };
 		55A446E82B1BC4CA008A93E6 /* PaginatedResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaginatedResponse.swift; sourceTree = "<group>"; };
@@ -74,6 +76,7 @@
 			children = (
 				55A446E72B1BC4B9008A93E6 /* Models */,
 				55D1ECBA2B1ACBAC00A75267 /* Network */,
+				308440152B2D207600291F2D /* CharactersListView.swift */,
 				55D1ECAA2B1AC0D300A75267 /* RickAndMortyApp.swift */,
 				55D1ECAC2B1AC0D300A75267 /* ContentView.swift */,
 				55D1ECB82B1AC67300A75267 /* CharacterRow.swift */,
@@ -176,6 +179,7 @@
 				55D1ECBC2B1ACBC300A75267 /* StatusCode.swift in Sources */,
 				551B1FC32B1B89F7008AAB3A /* Client.swift in Sources */,
 				551B1FC52B1B9996008AAB3A /* RESTClient.swift in Sources */,
+				308440162B2D207600291F2D /* CharactersListView.swift in Sources */,
 				55D1ECAB2B1AC0D300A75267 /* RickAndMortyApp.swift in Sources */,
 				55A446E92B1BC4CA008A93E6 /* PaginatedResponse.swift in Sources */,
 				55A446EB2B1BC545008A93E6 /* Character.swift in Sources */,
