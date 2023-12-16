@@ -10,6 +10,7 @@ import Combine
 
 class CharactersListVM: ObservableObject {
     @Published var characters: [Character] = []
+    @Published var currentPage: Int = 1
 
     private let client = RESTClient<PaginatedResponse<Character>>(client: Client.rickAndMorty)
 
@@ -17,7 +18,7 @@ class CharactersListVM: ObservableObject {
 
     init() {
         client
-            .showPublisher(path: "/api/character", page: 1)
+            .showPublisher(path: "/api/character", page: currentPage)
             .receive(on: RunLoop.main)
             .sink { _ in
                 print("Did complete loading")
@@ -26,6 +27,11 @@ class CharactersListVM: ObservableObject {
                 self.characters.append(contentsOf: results)
             }
             .store(in: &cancelableSet)
+    }
+
+    func loadNextPage() {
+        currentPage += 1
+        print("It should load with combine")
     }
 }
 
@@ -36,6 +42,11 @@ struct CharactersListView: View {
         NavigationView {
             List(vm.characters) { character in
                 CharacterRow(character: character)
+                    .onAppear {
+                        if character == vm.characters.last {
+                            vm.loadNextPage()
+                        }
+                    }
             }
             .listStyle(.plain)
             .navigationTitle("Characters")
