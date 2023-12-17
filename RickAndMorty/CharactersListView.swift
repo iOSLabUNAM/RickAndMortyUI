@@ -10,43 +10,66 @@ import Combine
 
 class CharactersListVM: ObservableObject {
     @Published var characters: [Character] = []
-    @Published var currentPage: Int = 1
-
+    @Published var isLoading = false
+    private var currentPage: Int = 1
+    private var hasMorePages = true
     private let client = RESTClient<PaginatedResponse<Character>>(client: Client.rickAndMorty)
 
     private var cancelableSet: Set<AnyCancellable> = []
 
     init() {
-        client
-            .showPublisher(path: "/api/character", page: currentPage)
-            .receive(on: RunLoop.main)
-            .sink { _ in
-                print("Did complete loading")
-            } receiveValue: { response in
-                let results = response?.results ?? []
-                self.characters.append(contentsOf: results)
-            }
-            .store(in: &cancelableSet)
+        load()
     }
 
-    func loadNextPage() {
-        currentPage += 1
-        print("It should load with combine")
+    func loadMoreIfNeeded(currentCharacter character: Character?) {
+        guard let character = character else {
+            load()
+            return
+        }
+
+        let thresholdIndex = characters.index(characters.endIndex, offsetBy: -5)
+        let currentIndex = characters.firstIndex(where: { $0 == character })
+        if currentIndex == thresholdIndex {
+            load()
+        }
+    }
+
+    func load() {
+        guard !isLoading && hasMorePages else { return }
+
+        isLoading = true
+        client
+            .showPublisher(path: "/api/character", page: currentPage)
+            .receive(on: DispatchQueue.main)
+            .handleEvents(receiveOutput: { response in
+                self.isLoading = false
+                self.currentPage += 1
+                if let _ = response?.info.next {
+                    self.hasMorePages = true
+                } else {
+                    self.hasMorePages = false
+                }
+            })
+            .map { self.characters + ($0?.results ?? []) }
+            .catch({ _ in Just(self.characters) })
+            .assign(to: \.characters, on: self)
+            .store(in: &cancelableSet)
     }
 }
 
 struct CharactersListView: View {
-    let vm = CharactersListVM()
+    @ObservedObject var vm = CharactersListVM()
 
     var body: some View {
         NavigationView {
             List(vm.characters) { character in
                 CharacterRow(character: character)
                     .onAppear {
-                        if character == vm.characters.last {
-                            vm.loadNextPage()
-                        }
+                        vm.loadMoreIfNeeded(currentCharacter: character)
                     }
+                if vm.isLoading {
+                    ProgressView()
+                }
             }
             .listStyle(.plain)
             .navigationTitle("Characters")
